@@ -16,7 +16,7 @@ public class CSVProcessorImpl implements CSVProcessor{
     private String outputFileName;
     List<String[]> data;
 
-    CSVProcessorImpl(String inputFileName, String outputFileName) throws ParseException {
+    public CSVProcessorImpl(String inputFileName, String outputFileName) throws ParseException {
 
         try (FileReader fileReader = new FileReader(inputFileName);
              BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -45,7 +45,7 @@ public class CSVProcessorImpl implements CSVProcessor{
         List<Integer> columnIdxs = new ArrayList<>();
         for (String property : properties){
             int i = 0;
-            while (i < header.length && !(header[i].equals(property))) i++;
+            while (i < header.length && !(header[i].equalsIgnoreCase(property))) i++;
 
             if (i == header.length) throw new IllegalArgumentException("Property not found");
             else columnIdxs.add(i);
@@ -72,6 +72,19 @@ public class CSVProcessorImpl implements CSVProcessor{
 
     @Override
     public void filter(FilterCondition condition) {
+
+        String[] header = data.getFirst();
+
+        List<String[]> filteredData = new ArrayList<>();
+        filteredData.add(header);
+        for (int i = 1; i < data.size(); i++) {
+            String[] row = data.get(i);
+
+            if (condition.evalFilterCondition(header, row)) {
+                filteredData.add(row);
+            }
+        }
+        data = filteredData;
     }
 
     public void writeChanges() {
@@ -90,5 +103,7 @@ public class CSVProcessorImpl implements CSVProcessor{
     @Override
     public void notarize() {
     }
+
+
 
 }
