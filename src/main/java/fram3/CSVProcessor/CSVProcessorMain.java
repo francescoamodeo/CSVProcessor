@@ -2,6 +2,8 @@ package fram3.CSVProcessor;
 
 import org.apache.commons.cli.*;
 
+import javax.xml.transform.Source;
+
 public class CSVProcessorMain {
 
     public static void main(String[] args) {
@@ -71,6 +73,8 @@ public class CSVProcessorMain {
         } catch (ParseException e){
             System.out.println(e.getMessage());
             helper.printHelp("CSVProcessor <inputFileName> <outputFileName>", options);
+        } catch (IllegalArgumentException e){
+            System.out.println(e.getMessage());
         }
     }
 }
