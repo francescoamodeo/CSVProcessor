@@ -1,9 +1,14 @@
 package fram3.CSVProcessor;
 
 import java.io.*;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eternitywall.ots.DetachedTimestampFile;
+import com.eternitywall.ots.OpenTimestamps;
+import com.eternitywall.ots.Timestamp;
+import com.eternitywall.ots.op.OpSHA256;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
@@ -88,7 +93,7 @@ public class CSVProcessorImpl implements CSVProcessor{
     }
 
     public void writeChanges() {
-        try (FileWriter fileWriter = new FileWriter(outputFileName);
+        try (FileWriter fileWriter = new FileWriter(this.outputFileName);
              BufferedWriter bufferedReader = new BufferedWriter(fileWriter);
              CSVWriter csvWriter = new CSVWriter(bufferedReader)) {
 
@@ -102,8 +107,22 @@ public class CSVProcessorImpl implements CSVProcessor{
 
     @Override
     public void notarize() {
+
+        File outputFile = new File(this.outputFileName);
+        File timeStampedFile = new File(this.outputFileName + ".ots");
+
+        try (FileOutputStream fos = new FileOutputStream(timeStampedFile);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(oos)){
+
+            DetachedTimestampFile detachedTimestampFile = DetachedTimestampFile.from(new OpSHA256(), outputFile);
+            Timestamp timestamp = OpenTimestamps.stamp(detachedTimestampFile);
+
+            //serialization timestamp object
+            bufferedOutputStream.write(timestamp.serialize());
+
+        }catch (IOException | NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
-
-
-
 }
