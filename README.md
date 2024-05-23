@@ -1,4 +1,4 @@
-#CSVProcessor
+# CSVProcessor
 
 Processor for .csv files. 
 Provides functionalities to sort and filter data using multiple properties and logical conditions.
