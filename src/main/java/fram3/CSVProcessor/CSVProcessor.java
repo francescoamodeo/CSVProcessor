@@ -9,7 +9,7 @@ public interface CSVProcessor {
     void sortBy(String[] properties) throws IllegalArgumentException;
 
     /**
-     * filter csv data using a logical condition formed by AND and OR operators and Filter expressions
+     * filter csv data using a logical condition formed by AND/OR operators and Filter expressions
      * @param condition logical condition of filters
      * @throws IllegalArgumentException if one filter is malformed
      */
