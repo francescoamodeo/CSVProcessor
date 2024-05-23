@@ -63,14 +63,14 @@ public class FilterCondition {
             Filter nextFilter = this.filters.get(i);
 
             switch (logicalOperator) {
-                case "AND" -> { //short circuit AND
+                case "AND"://short circuit AND
                     if (!filterEval) return false;
                     filterEval = evalFilter(nextFilter, header, row);
-                }
-                case "OR" -> { //short circuit OR
+                    break;
+                case "OR"://short circuit OR
                     if (filterEval) return true;
                     filterEval = evalFilter(nextFilter, header, row);
-                }
+                    break;
             }
         }
         return filterEval;
@@ -85,15 +85,22 @@ public class FilterCondition {
         else columnIdx = i;
 
         String cellValue = row[columnIdx];
-        return switch (filter.operator) {
-            case "=" -> cellValue.equals(filter.value);
-            case "!=" -> !cellValue.equals(filter.value);
-            case ">" -> compareCellValues(cellValue, filter.value) > 0;
-            case "<" -> compareCellValues(cellValue, filter.value) < 0;
-            case ">=" -> compareCellValues(cellValue, filter.value) >= 0;
-            case "<=" -> compareCellValues(cellValue, filter.value) <= 0;
-            default -> false;
-        };
+        switch (filter.operator) {
+            case "=":
+                return cellValue.equals(filter.value);
+            case "!=":
+                return !cellValue.equals(filter.value);
+            case ">":
+                return compareCellValues(cellValue, filter.value) > 0;
+            case "<":
+                return compareCellValues(cellValue, filter.value) < 0;
+            case ">=":
+                return compareCellValues(cellValue, filter.value) >= 0;
+            case "<=":
+                return compareCellValues(cellValue, filter.value) <= 0;
+            default:
+                return false;
+        }
     }
 
     private int compareCellValues(String cellValue, String value){
