@@ -87,7 +87,7 @@ public class CSVProcessorImpl implements CSVProcessor{
         File outputFile = new File(fileName);
         File timeStampedFile = new File(fileName + ".ots");
 
-        System.out.println("Notarizing " + fileName + ".ots ...");
+        System.out.println("Notarizing " + fileName + " ...");
         try (FileOutputStream fos = new FileOutputStream(timeStampedFile);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(oos)){
